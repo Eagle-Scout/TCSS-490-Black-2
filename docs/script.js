@@ -29,7 +29,7 @@ const PROJECTS = [
     tbd: false,
     desc: "A portfolio site cataloging five TCSS 490 artifacts over Autumn 2026, with a dedicated page about the author.",
     reflection: "The biggest challenge was understanding what it was I wanted to do after every prompt and iteration. What I would do differently is probably start off the chat by showing Claude the course page for the artifact and going from there, rather than trying to build a portfolio to match. Interestingly enough, the portfolio differs from my expectation, where instead of multiple .html files, there's only one, while the CSS and JS dictate what shows on the one page at any time.",
-    link: "",
+    link: "https://eagle-scout.github.io/TCSS-490-Black-2/",
     overview: "Built as Artifact 1. A static single-page application using hash-based client-side routing — no build step required. Includes a home page, an About page, a filterable artifact grid, and per-artifact detail pages, all within one HTML file.",
     resources: []
   },
