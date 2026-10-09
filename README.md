@@ -7,10 +7,10 @@ This repo is a reflection of the work done in TCSS 490 Autumn 2026 by team Black
 
 ## Artifact 1 - Website based project portfolio
 
-## Artifact 2 - TBD
+## Artifact 2 - Ad Blocker
 
-## Artifact 3 - TBD
+## Artifact 3 - AutoClick
 
-## Artifact 4 - TBD
+## Artifact 4 - BetterFood
 
-## Artifact 5 - Moonshot - TBD
+## Artifact 5 - Moonshot - Straw in a Needle Pile
