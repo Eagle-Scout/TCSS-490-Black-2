@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>TCSS 490 — Project Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ── Fixed header ──────────────────────────────────────── -->
+<header class="site-header">
+  <a href="#home" class="site-logo">TCSS<span class="accent">490</span></a>
+  <button class="hamburger" id="hamburger" aria-label="Open navigation" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- ── Drawer overlay ────────────────────────────────────── -->
+<div class="overlay" id="overlay"></div>
+
+<!-- ── Slide-in nav drawer ───────────────────────────────── -->
+<nav class="drawer" id="drawer" aria-label="Site navigation">
+  <div class="drawer-head">
+    <span>NAVIGATION</span>
+    <button class="drawer-close" id="drawer-close" aria-label="Close">✕</button>
+  </div>
+  <ul class="nav-list">
+    <li><a href="#home"        data-nav="home">Home</a></li>
+    <li><a href="#about"       data-nav="about">About</a></li>
+    <li class="nav-sep"></li>
+    <li><a href="#artifacts"   data-nav="artifacts">Artifacts</a></li>
+    <li class="nav-sub"><a href="#artifact-01" data-nav="artifact-01">01 — Project Portfolio</a></li>
+    <li class="nav-sub"><a href="#artifact-02" data-nav="artifact-02">02 — Ad Blocker</a></li>
+    <li class="nav-sub"><a href="#artifact-03" data-nav="artifact-03">03 — AutoClick</a></li>
+    <li class="nav-sub"><a href="#artifact-04" data-nav="artifact-04">04 — BetterFood</a></li>
+    <li class="nav-sub"><a href="#artifact-05" data-nav="artifact-05">05 — Straw in a Needle Pile</a></li>
+  </ul>
+</nav>
+
+<!-- ── Pages ─────────────────────────────────────────────── -->
+<main>
+
+  <!-- HOME -->
+  <section class="page" id="page-home">
+    <div class="pi">
+      <p class="eyebrow">University of Washington Tacoma</p>
+      <h1 class="hero">TCSS 490</h1>
+      <p class="subtitle">Project Portfolio</p>
+      <p class="lede">Five artifacts built over the quarter, each documented with its scope, tech stack, and a reflection on the process.</p>
+
+      <div class="term">
+        <div class="term-bar"><i></i><i></i><i></i><span>tcss490</span></div>
+        <div class="term-body" id="term"></div>
+      </div>
+
+      <div class="stats" id="stats"></div>
+
+      <div class="sec-head row-apart">
+        <h2 class="sec-title">Artifacts</h2>
+        <a class="small-link" href="#artifacts">Browse all →</a>
+      </div>
+      <div class="grid" id="home-grid"></div>
+
+      <footer>// Select an artifact to view its detail page.</footer>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="page" id="page-about">
+    <div class="pi">
+      <p class="eyebrow">University of Washington Tacoma · TCSS 490 · Autumn 2026</p>
+      <h1 class="hero">Peyton Laudanski</h1>
+      <p class="subtitle">BS CSS / 2027</p>
+
+      <div class="about-bio">
+        <div class="about-block">
+          <h3>About Me</h3>
+          <p>Hi, I'm Peyton, a CSS undergraduate Eagle Scout out of UW Tacoma. I recreationally Red Team on my homelab and I like to relax with mandarin oranges.</p>
+        </div>
+        <div class="about-block">
+          <h3>What I'm Building This Quarter</h3>
+          <p>I'm interested in building tools and apps that I myself would use in my day to day life. I want to solve my problems with tools I built and skills I learned, and I want to do my best and enjoy my time.</p>
+        </div>
+      </div>
+
+      <div class="about-links">
+        <a class="about-link-btn" href="#" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="about-link-btn" href="#" target="_blank" rel="noopener">LinkedIn ↗</a>
+      </div>
+
+      <div class="about-divider"></div>
+
+      <div class="sec-head row-apart">
+        <h2 class="sec-title">Artifacts This Quarter</h2>
+        <a class="small-link" href="#artifacts">All artifacts →</a>
+      </div>
+      <div class="grid" id="about-grid"></div>
+
+      <footer>// Add your GitHub and LinkedIn URLs to the links above.</footer>
+    </div>
+  </section>
+
+  <!-- ARTIFACTS -->
+  <section class="page" id="page-artifacts">
+    <div class="pi">
+      <div class="sec-head">
+        <h2 class="sec-title">All Artifacts</h2>
+        <div class="filters" id="filters" role="group" aria-label="Filter by team size"></div>
+      </div>
+      <div class="grid" id="artifacts-grid"></div>
+      <footer>// Click any artifact to open its full detail page.</footer>
+    </div>
+  </section>
+
+  <!-- ARTIFACT DETAIL (template, populated by script.js) -->
+  <section class="page" id="page-detail">
+    <div class="pi">
+      <a class="back-link" href="#artifacts">← Back to Artifacts</a>
+      <div id="detail-content"></div>
+    </div>
+  </section>
+
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>
