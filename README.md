@@ -7,6 +7,17 @@ This repo is a reflection of the work done in TCSS 490 Autumn 2026 by team Black
 
 ## Artifact 1 - Website based project portfolio
 
+A single-page portfolio site (`docs/`, served by GitHub Pages) with hash-based routing: Home, About, All Artifacts, and a detail page per artifact. All content is generated from the `PROJECTS` array in `docs/script.js`. The devlog is in [`docs/LOG.md`](docs/LOG.md).
+
+### Interactive terminal
+
+A simulated shell (no real shell access, no backend) in `docs/terminal.js`. Its filesystem is built from `PROJECTS`, and `cd` changes the page, so the terminal and the site stay in sync. It opens large on Home and as a floating panel on other pages, with a `>_ Terminal` button to reopen it after closing.
+
+- **Desktop:** type commands at the prompt. Tab completes names and ↑/↓ recalls history. `help` lists every command: `ls`, `cd`, `pwd`, `cat`, `tree`, `open`, `echo`, `history`, `clear`, `help`, `exit`. Backtick toggles the terminal.
+- **Mobile:** the input is hidden so no keyboard opens, and a blinking prompt stands in for it. Use the **Commands** menu to navigate and run `ls`, `tree`, `clear` and `help`. On phones `help` only lists the commands the menu can run, so `cat`, `open`, `echo` and the like don't appear.
+- `cd` accepts full paths (`cd ~/about`) from anywhere. Short artifact names (`cd artifact_2`, `cd adblock`) only work from inside `~/artifacts`.
+- Run it locally with `python3 -m http.server 8000 --directory docs`.
+
 ## Artifact 2 - Ad Blocker
 
 ## Artifact 3 - AutoClick
