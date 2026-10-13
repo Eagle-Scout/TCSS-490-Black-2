@@ -27,10 +27,10 @@ const PROJECTS = [
     tags: ["HTML", "CSS", "JavaScript"],
     featured: true,
     tbd: false,
-    desc: "A portfolio site cataloging five TCSS 490 artifacts over Autumn 2026, with a dedicated page about the author.",
-    reflection: "The biggest challenge was understanding what it was I wanted to do after every prompt and iteration. What I would do differently is probably start off the chat by showing Claude the course page for the artifact and going from there, rather than trying to build a portfolio to match. Interestingly enough, the portfolio differs from my expectation, where instead of multiple .html files, there's only one, while the CSS and JS dictate what shows on the one page at any time.",
+    desc: "A portfolio site cataloging five TCSS 490 artifacts over Autumn 2026, with a page about the author and a working terminal you can use to browse it.",
+    reflection: "The biggest challenge was understanding what it was I wanted to do after every prompt and iteration. What I would do differently is probably start off the chat by showing Claude the course page for the artifact and going from there, rather than trying to build a portfolio to match. Interestingly enough, the portfolio differs from my expectation, where instead of multiple .html files, there's only one. The CSS and JS dictate what shows up on the page at any given time.",
     link: "https://eagle-scout.github.io/TCSS-490-Black-2/",
-    overview: "Built as Artifact 1. A static single-page application using hash-based client-side routing — no build step required. Includes a home page, an About page, a filterable artifact grid, and per-artifact detail pages, all within one HTML file.",
+    overview: "Built as Artifact 1. A static single-page application using hash-based client-side routing — no build step required. Includes a home page, an About page, a filterable artifact grid, and per-artifact detail pages, all within one HTML file and generated from one PROJECTS array. It also has an interactive terminal: a simulated shell whose filesystem is built from that same array, so ls, cd and cat move around the site and every folder matches a page. On desktop you type commands (help lists them all); on phones the input is hidden and a Commands menu runs navigation commands instead, so no keyboard is needed. The devlog is linked in the resources below.",
     resources: [
       { label: "Devlog (LOG.md)", url: "https://github.com/Eagle-Scout/TCSS-490-Black-2/blob/main/docs/LOG.md" }
     ]

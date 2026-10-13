@@ -145,6 +145,7 @@
       <form class="tty-row" id="tty-form" autocomplete="off">
         <label class="tp" id="tty-prompt" for="tty-in"></label>
         <input id="tty-in" type="text" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" aria-label="Terminal input">
+        <span class="cursor tty-fakecur" aria-hidden="true"></span>
       </form>
     </div>`;
 
@@ -180,20 +181,27 @@
 
   const COMMANDS = {
     help() {
-      [
-        ["ls [path]",    "list files and folders"],
-        ["cd [path]",    "change folder — this also changes the page"],
-        ["",             "  in ~/artifacts: cd artifact_2, cd adblock"],
-        ["pwd",          "show the current folder"],
-        ["cat <file>",   "print a file"],
-        ["tree",         "show everything below here"],
-        ["open [path]",  "open an artifact's live link"],
-        ["history",      "show previous commands"],
-        ["clear",        "clear the screen"],
-        ["exit",         "close the terminal"]
-      ].forEach(([c, d]) => print(`<span class="tok">${esc(c.padEnd(14))}</span>${esc(d)}`));
+      // [usage, description, shown on phones?] — phones only see what the Commands menu can run
+      const rows = [
+        ["ls [path]",    "list files and folders",                              true],
+        ["cd [path]",    "change folder — this also changes the page",          true],
+        ["",             "  in ~/artifacts: cd artifact_2, cd adblock",         false],
+        ["pwd",          "show the current folder",                             false],
+        ["cat <file>",   "print a file",                                        false],
+        ["tree",         "show everything below here",                          true],
+        ["open [path]",  "open an artifact's live link",                        false],
+        ["echo <text>",  "print text back",                                     false],
+        ["history",      "show previous commands",                              false],
+        ["clear",        "clear the screen",                                    true],
+        ["help",         "show this list",                                      true],
+        ["exit",         "close the terminal",                                  false]
+      ];
+      rows.filter(r => !mobile.matches || r[2])
+          .forEach(([c, d]) => print(`<span class="tok">${esc(c.padEnd(14))}</span>${esc(d)}`));
       print("");
-      printText("Tab completes names, ↑/↓ recalls history, and the Commands menu above types for you.", "tdim");
+      printText(mobile.matches
+        ? "Tap Commands above to navigate and run commands."
+        : "Tab completes names, ↑/↓ recalls history, and the Commands menu above types for you.", "tdim");
     },
 
     ls(args) {
@@ -249,6 +257,13 @@
       window.open(p.link, "_blank", "noopener");
     },
 
+    echo(args, text) {
+      if (mobile.matches) return printText("echo: needs a keyboard — available on desktop", "terr");
+      // Use the raw text so spacing is kept; strip one pair of matching quotes like a shell would
+      const rest = text.replace(/^echo\s*/, "");
+      printText(rest.replace(/^(["'])(.*)\1$/, "$2"));
+    },
+
     history() {
       hist.forEach((h, i) => printText(String(i + 1).padStart(3) + "  " + h));
     },
@@ -275,7 +290,7 @@
     const [cmd, ...args] = text.split(/\s+/);
     const fn = Object.prototype.hasOwnProperty.call(COMMANDS, cmd) ? COMMANDS[cmd] : null;
     if (!fn) return printText(`${cmd}: command not found — try 'help'`, "terr");
-    fn(args);
+    fn(args, text);
   }
 
   /* ── Navigation (terminal <-> page) ───────────────────────── */
@@ -361,8 +376,8 @@
   async function typeAndRun(cmd) {
     if (typing || !cmd) return;
     typing = true;
-    input.focus({ preventScroll: true });
-    if (!reduced.matches) {
+    if (!mobile.matches) input.focus({ preventScroll: true });
+    if (!reduced.matches && !mobile.matches) {
       input.value = "";
       for (const ch of cmd) { input.value += ch; await sleep(22); }
       await sleep(160);
@@ -472,7 +487,6 @@
     const home = onHome();
     const m    = mobile.matches;
     const where =
-      m                  ? (home ? "inline" : "none") :
       mode === "closed"  ? "none" :
       home               ? "inline" : "float";
 
@@ -490,7 +504,7 @@
     }
 
     if (where === "none") menuOpen(false);
-    toggle.hidden  = !(where === "none" && !m);
+    toggle.hidden  = where !== "none";
 
     if (where !== "none") startBoot();
   }
@@ -530,8 +544,7 @@
     store.set(K.booted, "1");
 
     if (mobile.matches) {
-      print("Interactive mode is available on desktop for full functionality.", "tdim");
-      print("This is a visual-only preview.", "tdim");
+      print("Tap <b>Commands</b> above to run commands — no keyboard needed.", "tdim");
     } else {
       print("Type <span class=\"tok\">help</span> to see commands, or pick one from the <b>Commands</b> menu above.", "tdim");
     }
@@ -539,12 +552,12 @@
 
     booting = false;
     tty.classList.remove("tty-booting");
-    input.disabled  = mobile.matches;
-    cmdBtn.disabled = mobile.matches;
+    input.disabled  = mobile.matches;   // phones use the Commands menu, so no soft keyboard
+    cmdBtn.disabled = false;
   }
 
   mobile.addEventListener("change", () => {
-    if (!booting) { input.disabled = mobile.matches; cmdBtn.disabled = mobile.matches; }
+    if (!booting) input.disabled = mobile.matches;
     place();
   });
 
