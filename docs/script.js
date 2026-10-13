@@ -203,39 +203,6 @@ $("stats").innerHTML = [
 
 $("home-grid").innerHTML = PROJECTS.map(p => cardHTML(p, true)).join("");
 
-// Terminal animation
-const term  = $("term");
-const steps = [
-  ['<span class="tp">$</span> ',     "cd tcss490-portfolio && ./build.sh"],
-  ['\n<span class="tdim">›</span> ', "Compiling sources..."],
-  ['\n<span class="tdim">›</span> ', "Running tests..."],
-  ['\n<span class="tok">✓</span> ',  "Build complete.  5 artifacts tracked."]
-];
-
-if (matchMedia("(prefers-reduced-motion: reduce)").matches) {
-  term.innerHTML = steps.map(([p, t]) => p + esc(t)).join("");
-} else {
-  let html = "", si = 0, ci = 0;
-  (function tick() {
-    if (si >= steps.length) {
-      term.innerHTML = html + '<span class="cursor"></span>';
-      return;
-    }
-    const [pre, txt] = steps[si];
-    if (ci === 0) html += pre;
-    ci++;
-    term.innerHTML = html + esc(txt.slice(0, ci)) + '<span class="cursor"></span>';
-    if (ci >= txt.length) {
-      html += esc(txt);
-      si++;
-      ci = 0;
-      setTimeout(tick, 480);
-    } else {
-      setTimeout(tick, si === 0 ? 36 : 14);
-    }
-  })();
-}
-
 /* ── About page ───────────────────────────────────────────── */
 function renderAboutGrid() {
   $("about-grid").innerHTML = PROJECTS.map(p => cardHTML(p, false)).join("");
@@ -320,4 +287,7 @@ function renderDetail(num) {
 }
 
 /* ── Init ─────────────────────────────────────────────────── */
-navigate(location.hash || "#home");
+// A bare URL gets "#home" so Home looks the same whether you arrive or navigate to it.
+// replaceState swaps the URL in place: no hashchange event and no extra back-button entry.
+if (!location.hash) history.replaceState(null, "", "#home");
+navigate(location.hash);
