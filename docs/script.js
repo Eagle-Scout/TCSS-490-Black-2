@@ -17,6 +17,7 @@
      link       string   URL to the live artifact (empty = hidden)
      overview   string   longer description for the detail page
      resources  array    [{ label, url }] — GitHub, docs, etc.
+     video      object   optional { src, caption } — embedded on the detail page
 ─────────────────────────────────────────────────────────────── */
 const PROJECTS = [
   {
@@ -32,7 +33,7 @@ const PROJECTS = [
     link: "https://eagle-scout.github.io/TCSS-490-Black-2/",
     overview: "Built as Artifact 1. A static single-page application using hash-based client-side routing — no build step required. Includes a home page, an About page, a filterable artifact grid, and per-artifact detail pages, all within one HTML file and generated from one PROJECTS array. It also has an interactive terminal: a simulated shell whose filesystem is built from that same array, so ls, cd and cat move around the site and every folder matches a page. On desktop you type commands (help lists them all); on phones the input is hidden and a Commands menu runs navigation commands instead, so no keyboard is needed. The devlog is linked in the resources below.",
     resources: [
-      { label: "Devlog (LOG.md)", url: "https://github.com/Eagle-Scout/TCSS-490-Black-2/blob/main/docs/LOG.md" }
+      { label: "Devlog (LOG.md)", url: "https://github.com/Eagle-Scout/TCSS-490-Black-2/blob/main/logs/LOG.md" }
     ]
   },
   {
@@ -45,12 +46,15 @@ const PROJECTS = [
     tbd: false,
     desc: "A native macOS app that opens YouTube and Twitch with ad blocking built in, and only those sites, so I can avoid ads even when they change their code.",
     reflection: "",
-    link: "",
-    overview: "Built as Artifact 2. A sandboxed macOS app: a SwiftUI window around a WKWebView, so it is the real YouTube and Twitch with my own Google sign-in. Blocking has three layers: network rules that block ad hosts and hide ad slots, a YouTube script that strips ad data from player responses, and a Twitch script that filters ad segments out of the video playlist. Only an editable list of allowed sites will open, with a saved-sites home page, an in-app editor for the blocking scripts, an ads-skipped counter, and an Ads showing? panel that walks through fixes when something breaks. The usage guide covers installing, using and modifying it.",
+    link: "https://github.com/Eagle-Scout/TCSS-490-Black-2/tree/artifact-2/AdFree",
+    overview: "Built as Artifact 2. A sandboxed macOS app: a SwiftUI window around a WKWebView, so it is the real YouTube and Twitch with my own Google sign-in. Blocking has three layers: network rules that block ad hosts and hide ad slots, a YouTube script that strips ad data from player responses, and a Twitch script that filters ad segments out of the video playlist. Only an editable list of allowed sites will open, with a home page that mirrors that list, an in-app editor for the blocking scripts, an ads-skipped counter, and an Ads showing? panel that walks through fixes when something breaks. The usage guide covers installing, using and modifying it.",
+    video: {
+      src: "media/adfree-demo.mp4",
+      caption: "A 40-second illustration of AdFree: the home page, a blocked link, adding a site, blocking an ad, and the fix panel. Placeholder sites; generated, not a screen recording."
+    },
     resources: [
-      { label: "Usage guide", url: "adfree-guide.html" },
-      { label: "Devlog (LOG-artifact-2.md)", url: "https://github.com/Eagle-Scout/TCSS-490-Black-2/blob/artifact-2-adblocker/docs/LOG-artifact-2.md" },
-      { label: "Source (AdFree/)", url: "https://github.com/Eagle-Scout/TCSS-490-Black-2/tree/artifact-2-adblocker/AdFree" }
+      { label: "Usage guide", url: "#adfree-manual" },
+      { label: "Devlog (LOG2.md)", url: "https://github.com/Eagle-Scout/TCSS-490-Black-2/blob/artifact-2/logs/LOG2.md" }
     ]
   },
   {
@@ -141,6 +145,8 @@ function navigate(raw) {
   } else if (hash === "#artifacts") {
     pid = "page-artifacts";
     renderArtGrid();
+  } else if (hash === "#adfree-manual") {
+    pid = "page-manual";
   } else if (/^#artifact-\d+$/.test(hash)) {
     const n = parseInt(hash.replace("#artifact-", ""), 10);
     renderDetail(n);
@@ -149,10 +155,12 @@ function navigate(raw) {
 
   pages.forEach(p => p.classList.toggle("active", p.id === pid));
 
+  // The manual has no menu entry of its own; highlight its parent artifact instead.
+  const navHash = hash === "#adfree-manual" ? "#artifact-02" : hash;
   document.querySelectorAll("[data-nav]").forEach(a =>
     a.classList.toggle(
       "active",
-      "#" + a.dataset.nav === hash || (hash === "#home" && a.dataset.nav === "home")
+      "#" + a.dataset.nav === navHash || (navHash === "#home" && a.dataset.nav === "home")
     )
   );
 
@@ -164,6 +172,7 @@ function navigate(raw) {
     proj                  ? `Artifact ${pad(proj.artifact)} — TCSS 490` :
     hash === "#about"     ? "About — TCSS 490"                          :
     hash === "#artifacts" ? "Artifacts — TCSS 490"                      :
+    hash === "#adfree-manual" ? "AdFree Manual — TCSS 490"              :
                             "TCSS 490 — Project Portfolio";
 }
 
@@ -277,6 +286,12 @@ function renderDetail(num) {
         <h4>Overview</h4>
         <p>${esc(p.overview || p.desc)}</p>
       </div>
+      ${p.video ? `
+      <div class="dblock demo" style="grid-column:1/-1">
+        <h4>Demo</h4>
+        <video controls playsinline preload="metadata" src="${esc(p.video.src)}"></video>
+        ${p.video.caption ? `<p class="caption">${esc(p.video.caption)}</p>` : ""}
+      </div>` : ""}
       <div class="dblock">
         <h4>Tech Stack</h4>
         ${p.tags.length
@@ -286,7 +301,7 @@ function renderDetail(num) {
       <div class="dblock">
         <h4>Resources</h4>
         ${p.resources && p.resources.length
-          ? p.resources.map(r => `<a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.label)}</a>`).join("<br>")
+          ? p.resources.map(r => `<a href="${esc(r.url)}"${/^https?:/.test(r.url) ? ' target="_blank" rel="noopener"' : ""}>${esc(r.label)}</a>`).join("<br>")
           : '<p class="ph">// GitHub, docs, and other links go here</p>'}
       </div>
     </div>`;

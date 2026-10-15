@@ -301,6 +301,7 @@ final class BrowserModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
     func open(domain: String) {
         guard let url = URL(string: "https://\(domain)") else { return }
         showHome = false
+        openedFromHome = true
         webView.load(URLRequest(url: url))
     }
 
@@ -311,11 +312,61 @@ final class BrowserModel: NSObject, ObservableObject, WKNavigationDelegate, WKUI
         showHome = true
     }
 
-    private func showNotice(_ text: String) {
+    private func showNotice(_ text: String, seconds: Double = 4) {
         notice = text
-        DispatchQueue.main.asyncAfter(deadline: .now() + 4) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + seconds) { [weak self] in
             if self?.notice == text { self?.notice = nil }
         }
+    }
+
+    // MARK: Load failures (so a broken or mistyped site is never silent)
+
+    /// True while a home-page card is loading, so a failure can send you back to the home page.
+    private var openedFromHome = false
+
+    private func handleLoadFailure(_ error: Error) {
+        let e = error as NSError
+        // Only real network errors. Cancelled loads and our own blocked links are not failures.
+        guard e.domain == NSURLErrorDomain, e.code != NSURLErrorCancelled else { return }
+        let host = (e.userInfo[NSURLErrorFailingURLErrorKey] as? URL)?.host ?? "that site"
+        let reason: String
+        switch e.code {
+        case NSURLErrorCannotFindHost, NSURLErrorDNSLookupFailed:
+            reason = "\(host) doesn't exist or can't be found. Check the address in Settings → Allowed sites."
+        case NSURLErrorNotConnectedToInternet, NSURLErrorNetworkConnectionLost:
+            reason = "No internet connection, so \(host) couldn't load."
+        case NSURLErrorTimedOut:
+            reason = "\(host) took too long to respond."
+        case NSURLErrorCannotConnectToHost:
+            reason = "\(host) refused the connection."
+        case NSURLErrorSecureConnectionFailed, NSURLErrorServerCertificateUntrusted, NSURLErrorServerCertificateHasBadDate,
+             NSURLErrorServerCertificateHasUnknownRoot, NSURLErrorServerCertificateNotYetValid:
+            reason = "\(host) has a security problem (certificate), so it was not opened."
+        default:
+            reason = "\(host) couldn't load: \(e.localizedDescription)"
+        }
+        if openedFromHome { openedFromHome = false; showHome = true }
+        showNotice("Couldn't open this page. " + reason, seconds: 10)
+    }
+
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
+        handleLoadFailure(error)
+    }
+
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        handleLoadFailure(error)
+    }
+
+    func webView(_ webView: WKWebView, didCommit navigation: WKNavigation!) { openedFromHome = false }
+
+    /// Flags main pages that load but come back as an error (404, 500, ...).
+    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse,
+                 decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+        if navigationResponse.isForMainFrame, let http = navigationResponse.response as? HTTPURLResponse, http.statusCode >= 400 {
+            let host = http.url?.host ?? "this site"
+            showNotice("\(host) returned an error (\(http.statusCode)): the page may not exist.", seconds: 8)
+        }
+        decisionHandler(.allow)
     }
 
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,

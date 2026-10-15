@@ -37,7 +37,27 @@ built in, instead of a Safari extension.
 -   **Settings.** An editable allowed-sites list, an in-app editor for
     the rules and scripts, switches for each blocking layer, and an
     ads-skipped counter.
--   **Saved sites.** A start page that shows only saved sites.
+-   **Home page.** A start page with one card per allowed site, so the
+    home page and the Allowed sites list are always the same list. My
+    first version had saved sites with a star button; I replaced it so
+    there is only one list to manage.
+-   **Closing the window.** The app used to stay in the Dock with no
+    window after I closed it. It now quits when the window closes.
+-   **Twitch ads still playing.** When Twitch swaps in an ad, the whole
+    playlist can be ads, so there are no live segments left to filter. I
+    added a backup path: ask Twitch for the same stream as another
+    player type, which usually has no ads, and swap that playlist in. It
+    reuses the player's own request, so nothing about Twitch's API is
+    hardcoded. It is built, but I haven't confirmed it on a real ad
+    break yet. The ad counter also now counts once per ad.
+-   **Broken sites.** An allowed site that didn't exist silently left me
+    on the previous page, which looked like a redirect to YouTube. Failed
+    loads and error pages (404 and similar) now show a notice saying
+    why.
+-   **App icon.** A shield with a play button, drawn by a small script
+    in `AdFree/tools/` so it can be regenerated.
+-   **Demo video.** A short generated mock-up of what the app does, using
+    placeholder sites, embedded on the Artifact 2 page.
 -   **Sandbox.** The app now runs in the macOS App Sandbox.
 -   **Usage guide.** A page on the portfolio covering install, use and
     modification.
@@ -55,6 +75,8 @@ built in, instead of a Safari extension.
     fixed version.
 -   Allowed-site and script editing live together in Settings, with
     a confirmation before a site is added.
+-   The home page is the allowed list. A site can only leave the home
+    page by being removed from Settings.
 
 ------------------------------------------------------------------------
 
@@ -64,6 +86,8 @@ built in, instead of a Safari extension.
 -   An address bar; YouTube's and Twitch's own search is enough.
 -   A "developer mode" for editing; the in-app editor replaced it.
 -   Locking the scripts folder to my user. It adds almost nothing.
+-   Saved sites with a star button, and removing cards from the home
+    page directly.
 
 ------------------------------------------------------------------------
 
@@ -73,4 +97,5 @@ built in, instead of a Safari extension.
 -   A Safari or other browser extension version.
 -   A native "play without the page" fallback using `yt-dlp` or
     `streamlink`, if page-level blocking stops working.
+-   Confirming the Twitch backup-stream swap on a real ad break.
 -   Merging `artifact-2-adblocker` into `main`.

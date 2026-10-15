@@ -3,6 +3,7 @@
 <plist version="1.0">
 <dict>
     <key>CFBundleExecutable</key><string>AdFree</string>
+    <key>CFBundleIconFile</key><string>AdFree</string>
     <key>CFBundleIdentifier</key><string>edu.uw.tcss490.adfree</string>
     <key>CFBundleName</key><string>AdFree</string>
     <key>CFBundlePackageType</key><string>APPL</string>

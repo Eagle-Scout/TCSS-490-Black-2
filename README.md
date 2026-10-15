@@ -7,7 +7,7 @@ This repo is a reflection of the work done in TCSS 490 Autumn 2026 by team Black
 
 ## Artifact 1 - Website based project portfolio
 
-A single-page portfolio site (`docs/`, served by GitHub Pages) with hash-based routing: Home, About, All Artifacts, and a detail page per artifact. All content is generated from the `PROJECTS` array in `docs/script.js`. The devlog is in [`docs/LOG.md`](docs/LOG.md).
+A single-page portfolio site (`docs/`, served by GitHub Pages) with hash-based routing: Home, About, All Artifacts, and a detail page per artifact. All content is generated from the `PROJECTS` array in `docs/script.js`. The devlog is in [`docs/LOG.md`](logs/LOG.md).
 
 ### Interactive terminal
 
@@ -19,13 +19,17 @@ A simulated shell (no real shell access, no backend) in `docs/terminal.js`. Its 
 
 ## Artifact 2 - Ad Blocker
 
-**AdFree** (`AdFree/`) is a sandboxed macOS app that opens YouTube and Twitch with ad blocking built in, and only the sites on an editable allowed list. It is a SwiftUI window around a `WKWebView`, so it's the real sites with your own sign-in. Blocking has three layers: network rules, a YouTube script and a Twitch script. It has a saved-sites home page, an in-app editor for the scripts, an ads-skipped counter and an "Ads showing?" fix panel.
+**AdFree** ([`AdFree/`](AdFree/)) is a sandboxed macOS app that opens YouTube and Twitch with ad blocking built in, and only the sites on an editable allowed list. It is a SwiftUI window around a `WKWebView`, so it's the real sites with your own sign-in. Blocking has three layers: network rules, a YouTube script and a Twitch script. The home page shows one card per allowed site, and sites are added or removed in Settings. Settings also has an editor for the blocking scripts and rules. The toolbar has an ads-skipped counter and an "Ads showing?" panel that walks through fixes when something breaks. Closing the window quits the app.
 
 ```bash
 cd AdFree && ./build.sh run
 ```
 
-Needs macOS 14+ and Xcode. See the [usage guide](docs/adfree-guide.html) and the [devlog](docs/LOG-artifact-2.md).
+Needs macOS 14+ and Xcode.
+
+- [Usage guide / manual](https://eagle-scout.github.io/TCSS-490-Black-2/#adfree-manual): install, use, modify
+- [Devlog](logs/LOG2.md)
+- [Source folder](AdFree/)
 
 ## Artifact 3 - AutoClick
 

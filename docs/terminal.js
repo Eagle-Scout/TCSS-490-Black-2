@@ -311,8 +311,17 @@
     else place();
   }
 
+  // Pages that start with the terminal minimized (it stays reachable from the >_ Terminal button)
+  const QUIET_ROUTES = ["#adfree-manual"];
+  let lastRoute = null;
+
   // Page changed by menu, card, or back button: follow it
   function syncFromHash() {
+    if (QUIET_ROUTES.includes(location.hash) && lastRoute !== location.hash && mode === "open") {
+      mode = "closed";
+      store.set(K.mode, "closed");
+    }
+    lastRoute = location.hash;
     const parts = ROUTES[routeOf(location.hash)];
     if (parts) {
       cwd = parts;
