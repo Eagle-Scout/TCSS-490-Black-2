@@ -37,17 +37,21 @@ const PROJECTS = [
   },
   {
     artifact: 2,
-    name: "Ad Blocker",
+    name: "AdFree — Ad Blocker",
     type: "solo",
     team: 1,
-    tags: [],          // add tech stack once known, e.g. ["Safari Extension", "JavaScript"]
+    tags: ["Swift", "SwiftUI", "WebKit", "JavaScript"],
     featured: false,
-    tbd: true,
-    desc: "An ad blocker for Safari so that I can avoid YouTube or Twitch ads, even when they update their settings.",
+    tbd: false,
+    desc: "A native macOS app that opens YouTube and Twitch with ad blocking built in, and only those sites, so I can avoid ads even when they change their code.",
     reflection: "",
     link: "",
-    overview: "",
-    resources: []
+    overview: "Built as Artifact 2. A sandboxed macOS app: a SwiftUI window around a WKWebView, so it is the real YouTube and Twitch with my own Google sign-in. Blocking has three layers: network rules that block ad hosts and hide ad slots, a YouTube script that strips ad data from player responses, and a Twitch script that filters ad segments out of the video playlist. Only an editable list of allowed sites will open, with a saved-sites home page, an in-app editor for the blocking scripts, an ads-skipped counter, and an Ads showing? panel that walks through fixes when something breaks. The usage guide covers installing, using and modifying it.",
+    resources: [
+      { label: "Usage guide", url: "adfree-guide.html" },
+      { label: "Devlog (LOG-artifact-2.md)", url: "https://github.com/Eagle-Scout/TCSS-490-Black-2/blob/artifact-2-adblocker/docs/LOG-artifact-2.md" },
+      { label: "Source (AdFree/)", url: "https://github.com/Eagle-Scout/TCSS-490-Black-2/tree/artifact-2-adblocker/AdFree" }
+    ]
   },
   {
     artifact: 3,

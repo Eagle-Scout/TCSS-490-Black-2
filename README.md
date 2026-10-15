@@ -19,6 +19,14 @@ A simulated shell (no real shell access, no backend) in `docs/terminal.js`. Its 
 
 ## Artifact 2 - Ad Blocker
 
+**AdFree** (`AdFree/`) is a sandboxed macOS app that opens YouTube and Twitch with ad blocking built in, and only the sites on an editable allowed list. It is a SwiftUI window around a `WKWebView`, so it's the real sites with your own sign-in. Blocking has three layers: network rules, a YouTube script and a Twitch script. It has a saved-sites home page, an in-app editor for the scripts, an ads-skipped counter and an "Ads showing?" fix panel.
+
+```bash
+cd AdFree && ./build.sh run
+```
+
+Needs macOS 14+ and Xcode. See the [usage guide](docs/adfree-guide.html) and the [devlog](docs/LOG-artifact-2.md).
+
 ## Artifact 3 - AutoClick
 
 ## Artifact 4 - BetterFood
