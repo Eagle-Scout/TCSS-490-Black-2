@@ -45,7 +45,7 @@ const PROJECTS = [
     featured: false,
     tbd: false,
     desc: "A native macOS app that opens YouTube and Twitch with ad blocking built in, and only those sites, so I can avoid ads even when they change their code.",
-    reflection: "",
+    reflection: "My intention with the class was that Claude would do a majority of the work, while I would push things to github, do version control, and be a project manager. The difficult part with this artifact was that Claude pushed to github multiple times. I had not explicitly stated for it to not do so, however it was a nightmare trying to revert changes and commits that I did not want or approve of. Eventually figured it out, and now I have pull requests turned on.",
     link: "https://github.com/Eagle-Scout/TCSS-490-Black-2/tree/artifact-2/AdFree",
     overview: "Built as Artifact 2. A sandboxed macOS app: a SwiftUI window around a WKWebView, so it is the real YouTube and Twitch with my own Google sign-in. Blocking has three layers: network rules that block ad hosts and hide ad slots, a YouTube script that strips ad data from player responses, and a Twitch script that filters ad segments out of the video playlist. Only an editable list of allowed sites will open, with a home page that mirrors that list, an in-app editor for the blocking scripts, an ads-skipped counter, and an Ads showing? panel that walks through fixes when something breaks. The usage guide covers installing, using and modifying it.",
     video: {
