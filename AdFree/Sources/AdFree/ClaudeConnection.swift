@@ -48,19 +48,31 @@ enum ClaudeConnection {
         let command: String
         let note: String
         var primary = false
+        /// True when the command's first message can be edited before it runs.
+        var editablePrompt = false
         var id: String { title }
     }
 
+    static let defaultPrompt = "Use the adfree tools. Start with list_sites, then ask me which site I want to add or which ads I want blocked, and propose small, undoable rules."
+
+    /// `claude` with `prompt` as its first message. The prompt is single-quoted for the shell, with
+    /// line breaks turned into spaces, so whatever is typed stays plain text.
+    static func startCommand(prompt: String) -> String {
+        let text = prompt.split(whereSeparator: \.isNewline).joined(separator: " ")
+            .trimmingCharacters(in: .whitespaces)
+        return text.isEmpty ? "claude" : "claude \(shellQuote(text))"
+    }
+
     /// Always at least one option, so the Terminal and Copy buttons are never missing.
-    static func options(for state: ConnectionState) -> [Option] {
+    static func options(for state: ConnectionState, prompt: String = defaultPrompt) -> [Option] {
         let check = Option(title: "Check the connection", command: "claude mcp get \(serverName)",
                            note: "Shows what Claude Code has saved for AdFree and whether it can start the server.")
         let reset = Option(title: "Reset the connection", command: resetCommand,
                            note: "Removes the old entry, then adds one that points at this copy of AdFree.")
         let start = Option(title: "Work with Claude Code on AdFree",
-                           command: "claude \"Use the adfree tools. Start with list_sites, then ask me which site I want to add or which ads I want blocked, and propose small, undoable rules.\"",
+                           command: startCommand(prompt: prompt),
                            note: "Starts Claude Code with a first message. It asks your permission before each tool call, and every change can be undone.",
-                           primary: true)
+                           primary: true, editablePrompt: true)
         switch state {
         case .connected:
             return [start, check, reset]
@@ -99,7 +111,7 @@ enum ClaudeConnection {
         return (error[NSAppleScript.errorMessage] as? String) ?? "Couldn't open Terminal."
     }
 
-    private static func shellQuote(_ text: String) -> String {
+    static func shellQuote(_ text: String) -> String {
         "'" + text.replacingOccurrences(of: "'", with: "'\\''") + "'"
     }
 

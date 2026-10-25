@@ -125,7 +125,7 @@ private struct ScriptsTab: View {
         }
         .padding()
         .onAppear { text = browser.currentSource(file) }
-        .onChange(of: file) { _ in text = browser.currentSource(file); message = nil }
+        .onChange(of: file) { text = browser.currentSource(file); message = nil }
     }
 }
 
@@ -161,6 +161,7 @@ private struct ClaudeCodeTab: View {
     @State private var state: ConnectionState = .notConnected
     @State private var message: String?
     @State private var copied: String?
+    @State private var editedCommand = ClaudeConnection.startCommand(prompt: ClaudeConnection.defaultPrompt)
 
     var body: some View {
         Form {
@@ -171,22 +172,34 @@ private struct ClaudeCodeTab: View {
                     .font(.caption).foregroundStyle(.secondary)
             }
             ForEach(ClaudeConnection.options(for: state)) { option in
+                let command = option.editablePrompt ? oneLine(editedCommand) : option.command
                 Section(option.title) {
-                    Text(option.command)
+                    if option.editablePrompt {
+                        TextEditor(text: $editedCommand)
+                            .font(.system(.callout, design: .monospaced))
+                            .frame(height: 80)
+                            .padding(4)
+                            .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
+                        Button("Reset command") { editedCommand = ClaudeConnection.startCommand(prompt: ClaudeConnection.defaultPrompt) }
+                            .buttonStyle(.link).font(.caption)
+                            .disabled(editedCommand == ClaudeConnection.startCommand(prompt: ClaudeConnection.defaultPrompt))
+                    } else {
+                        Text(option.command)
                         .font(.system(.callout, design: .monospaced))
                         .textSelection(.enabled)
                         .padding(8)
                         .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
+                    }
                     HStack {
                         if option.primary {
-                            Button("Open Terminal here") { openTerminal(option.command) }
+                            Button("Open Terminal here") { openTerminal(command) }
                                 .buttonStyle(.borderedProminent)
                         } else {
-                            Button("Open Terminal here") { openTerminal(option.command) }
+                            Button("Open Terminal here") { openTerminal(command) }
                         }
                         Button(copied == option.id ? "Copied" : "Copy command") {
                             NSPasteboard.general.clearContents()
-                            NSPasteboard.general.setString(option.command, forType: .string)
+                            NSPasteboard.general.setString(command, forType: .string)
                             copied = option.id
                         }
                     }
@@ -225,6 +238,11 @@ private struct ClaudeCodeTab: View {
             Label("Claude Code's settings file couldn't be read. Reset the connection to fix it.", systemImage: "exclamationmark.triangle.fill")
                 .foregroundStyle(.orange)
         }
+    }
+
+    /// Line breaks would run as separate commands in Terminal, so the editable command is one line.
+    private func oneLine(_ text: String) -> String {
+        text.split(whereSeparator: \.isNewline).joined(separator: " ").trimmingCharacters(in: .whitespaces)
     }
 
     private func refresh() {
