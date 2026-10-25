@@ -6,6 +6,7 @@ struct SettingsView: View {
             AllowedSitesTab().tabItem { Label("Allowed sites", systemImage: "checkmark.shield") }
             ScriptsTab().tabItem { Label("Scripts & rules", systemImage: "doc.text") }
             BlockingTab().tabItem { Label("Blocking", systemImage: "shield") }
+            ClaudeCodeTab().tabItem { Label("Claude Code", systemImage: "terminal") }
         }
         .frame(width: 640, height: 520)
     }
@@ -27,6 +28,11 @@ private struct AllowedSitesTab: View {
                 ForEach(browser.allowedDomains, id: \.self) { domain in
                     HStack {
                         Text(domain)
+                        if let rules = browser.siteRules[domain] {
+                            Text("\(rules.hide.count + rules.block.count) rules").font(.caption).foregroundStyle(.secondary)
+                            Button("Clear rules") { browser.siteRules[domain] = nil; browser.reloadBlocking() }
+                                .buttonStyle(.link).font(.caption)
+                        }
                         Spacer()
                         if domain == BrowserModel.lockedDomain {
                             Text("always allowed").font(.caption).foregroundStyle(.secondary)
@@ -134,6 +140,7 @@ private struct BlockingTab: View {
             Section("Layers") {
                 Toggle("Network rules and hidden ad slots", isOn: $browser.rulesEnabled)
                 Toggle("YouTube script", isOn: $browser.youtubeScriptEnabled)
+                Toggle("YouTube video player (uses yt-dlp)", isOn: $browser.nativePlayerEnabled)
                 Toggle("Twitch script", isOn: $browser.twitchScriptEnabled)
             }
             Text("Turn layers off one at a time to find which one is breaking a page. Each change reloads the page.")
@@ -144,5 +151,92 @@ private struct BlockingTab: View {
             }
         }
         .formStyle(.grouped)
+    }
+}
+
+// MARK: Claude Code connection
+
+private struct ClaudeCodeTab: View {
+    @EnvironmentObject var bridge: BridgeService
+    @State private var state: ConnectionState = .notConnected
+    @State private var message: String?
+    @State private var copied: String?
+
+    var body: some View {
+        Form {
+            Section("Connection") {
+                statusLine
+                Button("Refresh status") { refresh() }.buttonStyle(.link)
+                Text("This checks the user-wide Claude Code setting. A .mcp.json inside a project is separate.")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+            ForEach(ClaudeConnection.options(for: state)) { option in
+                Section(option.title) {
+                    Text(option.command)
+                        .font(.system(.callout, design: .monospaced))
+                        .textSelection(.enabled)
+                        .padding(8)
+                        .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
+                    HStack {
+                        if option.primary {
+                            Button("Open Terminal here") { openTerminal(option.command) }
+                                .buttonStyle(.borderedProminent)
+                        } else {
+                            Button("Open Terminal here") { openTerminal(option.command) }
+                        }
+                        Button(copied == option.id ? "Copied" : "Copy command") {
+                            NSPasteboard.general.clearContents()
+                            NSPasteboard.general.setString(option.command, forType: .string)
+                            copied = option.id
+                        }
+                    }
+                    Text(option.note + " Terminal opens in the project folder (the nearest one above AdFree.app with a .mcp.json), or next to AdFree.app if none is found. macOS may ask once for permission to control Terminal.")
+                        .font(.caption).foregroundStyle(.secondary)
+                }
+            }
+            if let message {
+                Section { Text(message).font(.callout).foregroundStyle(.secondary) }
+            }
+            Section("Activity") {
+                if let last = bridge.lastRequest {
+                    LabeledContent("Last request", value: "\(bridge.lastTool), \(last.formatted(date: .omitted, time: .standard))")
+                } else {
+                    Text("No requests yet this session.").foregroundStyle(.secondary)
+                }
+                Text("Messages pass through the folder ~/.adfree/bridge. Claude Code asks your permission before each tool call, and every change is undoable (Scripts & rules → Revert, Allowed sites → Clear rules).")
+                    .font(.caption).foregroundStyle(.secondary)
+            }
+        }
+        .formStyle(.grouped)
+        .onAppear { refresh() }
+    }
+
+    @ViewBuilder
+    private var statusLine: some View {
+        switch state {
+        case .connected:
+            Label("Connected to this copy of AdFree.", systemImage: "checkmark.circle.fill").foregroundStyle(.green)
+        case .notConnected:
+            Label("Not connected yet.", systemImage: "circle.dashed").foregroundStyle(.secondary)
+        case .stale(let points):
+            Label("Connected to a different copy of AdFree (\(points)). Reset it to point here.", systemImage: "exclamationmark.triangle.fill")
+                .foregroundStyle(.orange)
+        case .unreadable:
+            Label("Claude Code's settings file couldn't be read. Reset the connection to fix it.", systemImage: "exclamationmark.triangle.fill")
+                .foregroundStyle(.orange)
+        }
+    }
+
+    private func refresh() {
+        state = ClaudeConnection.status()
+        copied = nil
+    }
+
+    private func openTerminal(_ command: String) {
+        if let problem = ClaudeConnection.openTerminal(running: command) {
+            message = problem
+        } else {
+            message = "Terminal opened with the command. When it finishes, press Refresh status."
+        }
     }
 }

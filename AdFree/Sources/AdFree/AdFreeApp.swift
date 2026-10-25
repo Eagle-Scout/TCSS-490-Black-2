@@ -8,7 +8,16 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 @main
 struct AdFreeApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
-    @StateObject private var browser = BrowserModel()
+    @StateObject private var browser: BrowserModel
+    @StateObject private var bridge: BridgeService
+
+    init() {
+        let browser = BrowserModel()
+        let bridge = BridgeService(browser: browser)
+        _browser = StateObject(wrappedValue: browser)
+        _bridge = StateObject(wrappedValue: bridge)
+        bridge.start() // opens the mailbox that Claude Code's MCP server talks to
+    }
 
     var body: some Scene {
         WindowGroup("AdFree") {
@@ -17,7 +26,7 @@ struct AdFreeApp: App {
                 .frame(minWidth: 900, minHeight: 600)
         }
         Settings {
-            SettingsView().environmentObject(browser)
+            SettingsView().environmentObject(browser).environmentObject(bridge)
         }
         .commands {
             CommandGroup(after: .toolbar) {

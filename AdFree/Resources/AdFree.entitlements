@@ -5,5 +5,15 @@
     <!-- App Sandbox: the app can only touch its own container, plus the network. -->
     <key>com.apple.security.app-sandbox</key><true/>
     <key>com.apple.security.network.client</key><true/>
+    <!-- Read-only: lets the Claude Code tab check whether AdFree is already connected. -->
+    <key>com.apple.security.temporary-exception.files.home-relative-path.read-only</key>
+    <array><string>/.claude.json</string></array>
+    <!-- Lets the Claude Code tab open Terminal and run the connect command there. Nothing else. -->
+    <key>com.apple.security.automation.apple-events</key><true/>
+    <key>com.apple.security.temporary-exception.apple-events</key>
+    <array><string>com.apple.Terminal</string></array>
+    <!-- One extra folder: the mailbox Claude Code's MCP server uses to talk to the app. -->
+    <key>com.apple.security.temporary-exception.files.home-relative-path.read-write</key>
+    <array><string>/.adfree/</string></array>
 </dict>
 </plist>

@@ -54,12 +54,12 @@ struct FixAdsView: View {
                                 .background(.quaternary, in: RoundedRectangle(cornerRadius: 6))
                         }
                     }
-                    step(5, "Edit the scripts",
+                    step(5, "Edit the scripts yourself",
                          "The rules and scripts can be edited inside the app. Open Settings → Scripts & rules, make a change, and press Save and apply. You can also open the folder in Finder from there.") {
                         SettingsLink { Text("Open Settings") }
                     }
 
-                    Text("Note: this version doesn't use yt-dlp or streamlink. Updating them won't help until the optional “Play natively” fallback is added.")
+                    Text("Backup: if YouTube blocks the ad blocker, turn on the yt-dlp switch in the toolbar to watch videos in a separate player while you fix it.")
                         .font(.caption).foregroundStyle(.secondary)
                     if !status.isEmpty { Text(status).font(.callout).foregroundStyle(.green) }
                 }

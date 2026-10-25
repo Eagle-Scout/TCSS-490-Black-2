@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "adfree": {
+      "command": "node",
+      "args": ["mcp/server.js"]
+    }
+  }
+}

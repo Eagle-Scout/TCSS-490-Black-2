@@ -12,5 +12,6 @@
     <key>LSMinimumSystemVersion</key><string>14.0</string>
     <key>NSPrincipalClass</key><string>NSApplication</string>
     <key>NSHighResolutionCapable</key><true/>
+    <key>NSAppleEventsUsageDescription</key><string>AdFree opens Terminal to connect Claude Code in one step.</string>
 </dict>
 </plist>

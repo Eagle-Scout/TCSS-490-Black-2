@@ -60,6 +60,11 @@ struct ContentView: View {
                 Label("Block ads", systemImage: browser.blockingEnabled ? "shield.fill" : "shield.slash")
             }
             .toggleStyle(.button)
+            Toggle(isOn: $browser.nativePlayerEnabled) {
+                Label("yt-dlp", systemImage: "play.rectangle")
+            }
+            .toggleStyle(.button)
+            .help("Play YouTube videos in a separate player (via yt-dlp) instead of YouTube's own. Use it as a backup if YouTube blocks the ad blocker.")
             Button { showFix = true } label: {
                 Label("Ads showing?", systemImage: "wrench.and.screwdriver")
             }
