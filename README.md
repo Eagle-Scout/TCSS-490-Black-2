@@ -33,6 +33,25 @@ Needs macOS 14+ and Xcode.
 
 ## Artifact 3 - AdFree Continued (AI Inside)
 
+Artifact 2's **AdFree** with Claude Code inside the workflow. AdFree itself makes no AI calls and needs no API key. Instead it ships an **MCP server** (`AdFree/mcp/server.js`, plain Node, no packages) that Claude Code runs on the user's existing login. Claude Code can read AdFree's diagnostic report and a page snapshot, then change per-site block rules, edit the blocking scripts, or turn layers on and off. It decides what is wrong and writes the fix. Code checks every input, limits what can change, applies it, logs it, and every change is undoable.
+
+An in-app chat using the user's own API key was built first and dropped: API calls bill per use, and the course access covers Claude Code, not the API. The reasoning is in the devlog.
+
+- **Bridge:** a file mailbox in `~/.adfree/bridge`, not a network port, so the app keeps its sandbox. The only added permissions are read/write for `~/.adfree/`, read-only for `~/.claude.json` and Apple events to Terminal.
+- **Settings → Claude Code:** checks whether AdFree is already connected to Claude Code, shows the right command (add, or reset if it points at another copy), and opens Terminal in the `AdFree` folder to run it or to start a working session.
+- **Scope:** `AdFree/.mcp.json` registers the server when Claude Code starts in `AdFree/`, so its working folder is AdFree and its files, not the whole repo.
+
+```bash
+cd AdFree && ./build.sh run
+node mcp/test.js   # 16 checks against a mock app
+```
+
+Needs macOS 14+, Xcode, Node.js and Claude Code. Status: the server passes its tests against a mock app; the full run of the real app with Claude Code is still being verified.
+
+- [MCP server README](AdFree/mcp/README.md): tools, safety notes, connecting
+- [Devlog](logs/LOG3.md)
+- [Source folder](AdFree/)
+
 ## Artifact 4 - BetterFood
 
 ## Artifact 5 - Moonshot - Straw in a Needle Pile
