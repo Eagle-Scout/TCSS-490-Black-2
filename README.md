@@ -31,7 +31,7 @@ Needs macOS 14+ and Xcode.
 - [Devlog](logs/LOG2.md)
 - [Source folder](AdFree/)
 
-## Artifact 3 - AutoClick
+## Artifact 3 - AdFree Continued (AI Inside)
 
 ## Artifact 4 - BetterFood
 

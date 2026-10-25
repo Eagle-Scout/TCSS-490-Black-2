@@ -59,17 +59,20 @@ const PROJECTS = [
   },
   {
     artifact: 3,
-    name: "AutoClick",
+    name: "AdFree Continued — AI Inside",
     type: "solo",
     team: 1,
-    tags: [],          // add tech stack once known
+    tags: ["Swift", "SwiftUI", "Node.js", "MCP", "Claude Code"],
     featured: false,
-    tbd: true,
-    desc: "A highly customizable auto clicker — the one I use isn't compatible on my machine anymore, so I'm building my own.",
+    tbd: false,
+    desc: "AdFree again, with Claude Code inside the workflow: an MCP server lets it read the app's report and change block rules and scripts when a site breaks, with every change checked by code and undoable.",
     reflection: "",
-    link: "",
-    overview: "",
-    resources: []
+    link: "https://github.com/Eagle-Scout/TCSS-490-Black-2/tree/artifact-3/AdFree",
+    overview: "Built as Artifact 3, on top of AdFree. The first plan was a chat window in the app using the user's own API key, which I built and then dropped because API calls bill per use and the course access covers Claude Code, not the API. The kept version is an MCP server (plain Node, no packages) that Claude Code runs, so the model is Claude Code and there is no key and no cost. It has 10 tools: read the diagnostic report and a page snapshot, list sites, read and write the blocking scripts and rules, set per-site block rules, toggle layers, and revert. The model diagnoses and writes the fix; code validates every input, restricts what can change, applies it and logs it. The sandboxed app and the server talk through a file mailbox in ~/.adfree, not a network port, so the app needs only one narrow folder exception. Settings has a Claude Code tab that checks whether AdFree is already connected, shows the right add or reset command, and opens Terminal in the AdFree folder to run it or to start a working session. Every change shows a banner and can be undone. The log covers the plans, the trade-offs and what is still unverified.",
+    resources: [
+      { label: "Devlog (LOG3.md)", url: "https://github.com/Eagle-Scout/TCSS-490-Black-2/blob/artifact-3/logs/LOG3.md" },
+      { label: "MCP server README", url: "https://github.com/Eagle-Scout/TCSS-490-Black-2/blob/artifact-3/AdFree/mcp/README.md" }
+    ]
   },
   {
     artifact: 4,
