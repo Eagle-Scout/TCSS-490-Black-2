@@ -32,7 +32,7 @@
 
   function artifactDir(p) {
     const route = `#artifact-${pad(p.artifact)}`;
-    if (p.tbd) {
+    if (p.status === "tbd") {
       return dir(route, {
         "status.txt": file((isPlaceholder(p.desc) ? "" : p.desc + "\n") + "// in progress — details coming soon")
       });

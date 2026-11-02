@@ -371,6 +371,7 @@ h2.sec-title { font: 700 1.6rem/1.1 var(--sans); margin: 0; letter-spacing: -.02
 .card.feat            { grid-column: 1 / -1; padding: 1.6rem; }
 .card.feat .card-name { font-size: 1.45rem; }
 .card.tbd             { opacity: .45; --tag: var(--line); }
+.card.progress .ctype { color: var(--amber); }
 .card[data-t=solo]    { --tag: var(--solo);  }
 .card[data-t=group]   { --tag: var(--group); }
 .card[data-t=mega]    { --tag: var(--mega);  }
@@ -437,6 +438,7 @@ h1.art-name {
   padding: .22rem .7rem;
 }
 .chip.done { color: var(--solo);  border-color: var(--solo); }
+.chip.progress { color: var(--amber); border-color: var(--amber); }
 .chip.ext  { color: var(--cyan); border-color: var(--cyan); text-decoration: none; transition: background .15s, color .15s; }
 .chip.ext:hover { background: var(--cyan); color: var(--bg); }
 

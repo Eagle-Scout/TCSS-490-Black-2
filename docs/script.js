@@ -11,7 +11,9 @@
      team       number   team size (0 = unknown)
      tags       array    tech stack labels ["HTML", "CSS", ...]
      featured   bool     true → spans full width on home / artifacts
-     tbd        bool     true → renders as a dim placeholder
+     status     string   "complete" | "progress" | "tbd"
+                         complete → finished; progress → being worked on, full page with an In progress chip;
+                         tbd → renders as a dim placeholder
      desc       string   one- or two-sentence summary (shown on card)
      reflection string   a few sentences on how it went (shown on detail page)
      link       string   URL to the live artifact (empty = hidden)
@@ -27,7 +29,7 @@ const PROJECTS = [
     team: 1,
     tags: ["HTML", "CSS", "JavaScript"],
     featured: true,
-    tbd: false,
+    status: "complete",
     desc: "A portfolio site cataloging five TCSS 490 artifacts over Autumn 2026, with a page about the author and a working terminal you can use to browse it.",
     reflection: "The biggest challenge was understanding what it was I wanted to do after every prompt and iteration. What I would do differently is probably start off the chat by showing Claude the course page for the artifact and going from there, rather than trying to build a portfolio to match. Interestingly enough, the portfolio differs from my expectation, where instead of multiple .html files, there's only one. The CSS and JS dictate what shows up on the page at any given time.",
     link: "https://eagle-scout.github.io/TCSS-490-Black-2/",
@@ -43,7 +45,7 @@ const PROJECTS = [
     team: 1,
     tags: ["Swift", "SwiftUI", "WebKit", "JavaScript"],
     featured: false,
-    tbd: false,
+    status: "complete",
     desc: "A native macOS app that opens YouTube and Twitch with ad blocking built in, and only those sites, so I can avoid ads even when they change their code.",
     reflection: "My intention with the class was that Claude would do a majority of the work, while I would push things to github, do version control, and be a project manager. The difficult part with this artifact was that Claude pushed to github multiple times. I had not explicitly stated for it to not do so, however it was a nightmare trying to revert changes and commits that I did not want or approve of. Eventually figured it out, and now I have pull requests turned on.",
     link: "https://github.com/Eagle-Scout/TCSS-490-Black-2/tree/artifact-3/AdFree",
@@ -64,7 +66,7 @@ const PROJECTS = [
     team: 1,
     tags: ["Swift", "SwiftUI", "Node.js", "MCP", "Claude Code"],
     featured: false,
-    tbd: false,
+    status: "complete",
     desc: "AdFree again, with Claude Code inside the workflow: an MCP server lets it read the app's report and change block rules and scripts when a site breaks, with every change checked by code and undoable.",
     reflection: "The original idea behind this was that a user could whitelist a website, then use an in-app model to generate blocklists for that site. After discovering that API keys are not covered with this plan, I swapped to an MCP server with CLaude Code integration. The app would detect if the MCP was connected, check the connection, reset the connection, and open up a CLI with claude code to work with the user. It's a bit odd, having claude in my CLI, but it helped fix multiple issues I had with the app, such as where claude code ran inside the parent directory instead of the current working directory. Didn't want the CLI to see more than it needed to. After that, it was resolving an issue my YouTube blockers had with my native (YT-DLP) player, which prevented YT-DLP from loading. It now loads. Its at this point in the quarter I am starting to appreciate the work Claude is doing, because it is running a whole lot of commands in the terminal, writing a whole bunch of code in swift, JS, JSON, CSS, HTML, and more. Stuff that would take me months to learn and then do, it does in minutes. I cannot express how much this has impacted me.",
     link: "https://github.com/Eagle-Scout/TCSS-490-Black-2/tree/artifact-3/AdFree",
@@ -77,13 +79,13 @@ const PROJECTS = [
   },
   {
     artifact: 4,
-    name: "BetterFood",
+    name: "GitHub Pull Request",
     type: "group",
     team: 0,
     tags: [],          // add tech stack once known
     featured: false,
-    tbd: true,
-    desc: "A phone app that identifies what it's pointed at, whether it's edible, and how unhealthy it is based on a ranking of possible ingredients from worst to healthiest.",
+    status: "progress",
+    desc: "For our Artifact 4, we are considering all of our options. As of now, we believe that completing a GitHub PR works with our group the most, and are spending time investigating the different GitHub repositories to give our time towards.",
     reflection: "",
     link: "",
     overview: "",
@@ -96,7 +98,7 @@ const PROJECTS = [
     team: 0,
     tags: [],
     featured: false,
-    tbd: true,
+    status: "tbd",
     desc: "A PC game to be released on Steam — or maybe it's just finding a single strand of hay in a pile of needles.",
     reflection: "",
     link: "",
@@ -187,24 +189,26 @@ function cardHTML(p, showFeat) {
   const feat = showFeat && p.featured ? " feat" : "";
   const nav  = `#artifact-${pad(p.artifact)}`;
 
-  const ia = !p.tbd
+  const ia = p.status !== "tbd"
     ? `tabindex="0" role="link"
        aria-label="View Artifact ${pad(p.artifact)}: ${esc(p.name)}"
        onclick="navigate('${nav}')"
        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();navigate('${nav}')}"`
     : "";
 
-  return `<article class="card${feat}${p.tbd ? " tbd" : ""}" data-t="${p.type}" ${ia}>
+  const label = p.status === "tbd" ? "—" : p.status === "progress" ? `${TL[p.type]} · in progress` : TL[p.type];
+
+  return `<article class="card${feat}${p.status === "tbd" ? " tbd" : ""}${p.status === "progress" ? " progress" : ""}" data-t="${p.type}" ${ia}>
     <div class="card-meta">
       <span>Artifact ${pad(p.artifact)}</span>
-      <span class="ctype">${p.tbd ? "—" : TL[p.type]}</span>
+      <span class="ctype">${label}</span>
     </div>
     <h3 class="card-name">${esc(p.name)}</h3>
     <p class="card-desc${isPlaceholder(p.desc) ? " ph" : ""}">${esc(p.desc)}</p>
     ${p.tags.length
       ? `<div class="tags">${p.tags.map(t => `<span>${esc(t)}</span>`).join("")}</div>`
       : ""}
-    ${!p.tbd && p.link
+    ${p.status !== "tbd" && p.link
       ? `<a class="view-btn" href="${esc(p.link)}" target="_blank" rel="noopener"
            onclick="event.stopPropagation()">View artifact ↗</a>`
       : ""}
@@ -212,7 +216,7 @@ function cardHTML(p, showFeat) {
 }
 
 /* ── Home page ────────────────────────────────────────────── */
-const complete = PROJECTS.filter(p => !p.tbd).length;
+const complete = PROJECTS.filter(p => p.status === "complete").length;
 
 $("stats").innerHTML = [
   ["5",             "artifacts"],
@@ -258,7 +262,7 @@ function renderDetail(num) {
     return;
   }
 
-  if (p.tbd) {
+  if (p.status === "tbd") {
     $("detail-content").innerHTML = `
       <span class="art-badge">Artifact ${pad(p.artifact)}</span>
       <h1 class="art-name">${esc(p.name)}</h1>
@@ -275,7 +279,9 @@ function renderDetail(num) {
     <span class="art-badge">Artifact ${pad(p.artifact)}</span>
     <h1 class="art-name">${esc(p.name)}</h1>
     <div class="art-chips">
-      <span class="chip done">Complete</span>
+      ${p.status === "progress"
+        ? '<span class="chip progress">In progress</span>'
+        : '<span class="chip done">Complete</span>'}
       <span class="chip">${TL[p.type]}</span>
       ${p.team > 0 ? `<span class="chip">${p.team} ${p.team === 1 ? "person" : "people"}</span>` : ""}
       ${p.tags.map(t => `<span class="chip">${esc(t)}</span>`).join("")}
