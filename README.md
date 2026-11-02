@@ -52,6 +52,8 @@ Needs macOS 14+, Xcode, Node.js and Claude Code. Status: the server passes its t
 - [Devlog](logs/LOG3.md)
 - [Source folder](AdFree/)
 
-## Artifact 4 - BetterFood
+## Artifact 4 - GitHub Pull Request (In Progress)
+
+We are considering all of our options. As of now, we believe that completing a GitHub PR works with our group the most, and are spending time investigating the different GitHub repositories to give our time towards.
 
 ## Artifact 5 - Moonshot - Straw in a Needle Pile
