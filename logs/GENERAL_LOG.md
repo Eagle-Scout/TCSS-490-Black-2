@@ -32,3 +32,39 @@ Work that isn't tied to one artifact (portfolio site, README, tooling, setup).
 - **Change:** In the Artifact 4 `desc` in `docs/script.js`, "and am spending" is now "and are spending".
 - **Reason:** The user asked for it. I had pasted the original unchanged and asked whether to fix it; the user fixed the wording here.
 - **Mistake:** I called the paragraph "word for word" in the earlier entries. That was true when written, but those entries now describe the text before this fix.
+
+## pandas session log and reflection added to Artifact 4
+
+- **Change:** Copied the pandas `LOG.md` (from the user's `pandas-eaglescout` checkout, attached in chat) into `logs/PANDAS_71819_SESSION_LOG.md`, unchanged. Added it as the only Artifact 4 entry in `resources` in `docs/script.js`, using the same `blob/artifact-3/` link style as the other artifacts.
+- **Reason for the name:** The user chose `PANDAS_71819_SESSION_LOG.md` over `LOG4.md`, so `LOG4.md` stays free for an Artifact 4 devlog. This matches `DAILYMOTION_ADBLOCK_LOG.md`.
+- **Reason for this log:** Editing `docs/` is portfolio work, and the user chose GENERAL_LOG.md.
+- **Reflection:** Pasted the user's Artifact 4 reflection into `reflection`, word for word (including the lowercase "i" and "pr").
+- **Nav name:** `docs/index.html` still said "04 — BetterFood" while `script.js` said "GitHub Pull Request". The user asked for "GitHub Pull Request", so the nav now matches. The earlier rename (entries above) missed the nav.
+- **Known caveat:** The copied log's header says it is "local only". That applies to the pandas repo; here it becomes public once pushed. The user saw this in the plan and went ahead. It contains their GitHub handle and git user, nothing secret.
+- **Not changed:** `status` stays `"progress"`, and `tags`, `team`, `link` and `overview` stay empty. The link to the log will 404 until the user pushes it.
+- **Hooks:** A `git log` call was blocked by the bash-guard hook (git disabled). A heredoc append to this file was blocked as "unbalanced quotes" (the text had apostrophes), so this entry was added with the Edit tool instead.
+- **Not committed:** Git is disabled for this project.
+
+## Artifact 4 marked complete
+
+- **Change:** In `docs/script.js`, Artifact 4 now has `status: "complete"`, `tags: ["Python"]`, and an `overview` written from `logs/PANDAS_71819_SESSION_LOG.md`.
+- **Reason:** The user said Artifact 4 is done and the tech stack is Python, and asked for an overview in the same style as the other artifacts.
+- **Overview content:** It covers the issue, the fix in `merge.py`, why it stays a `KeyError` and leaves `generic.py` alone, the tests, the release note, and the results (3062 passed, 0 failed, pre-commit clean). It does not say a PR was opened or merged, because the log ends before that ("Nothing is committed or pushed"). It leaves out that mypy was not run.
+- **Effect:** The home stat goes from 3/5 to 4/5 complete, and the card and detail page show "Complete".
+- **Not changed:** `desc` still holds the old check-in text ("we are considering all of our options"), which reads oddly on a finished artifact. `link` is empty (no PR URL given) and `team` is 0. Left for the user to decide.
+
+## Artifact 4 card description replaced
+
+- **Change:** The Artifact 4 `desc` in `docs/script.js` now gives a one-sentence summary of the pandas #71819 fix instead of the old check-in text.
+- **Reason:** I flagged that the check-in text read oddly on a finished artifact, and the user said to replace it. The new sentence follows the other cards: one sentence on what the artifact does.
+- **Note:** This replaces the user's own check-in paragraph, which earlier entries describe. That text is only kept in git history.
+
+## Artifact 5 replaced with the moonshot
+
+- **Change:** In `docs/script.js`, Artifact 5 is now "Moonshot — One Safety Policy, Every OS and Agent": `type: "solo"`, `team: 1`, `status: "progress"`. The nav entry in `docs/index.html` reads "05 — Moonshot: One Safety Policy".
+- **Reason:** The user asked to add the moonshot, solo with one person for now and in progress. I asked whether it should replace the "Straw in a Needle Pile" placeholder or be a sixth artifact; the user chose to replace 05.
+- **Content:** `desc` is a short summary. `overview` is the user's moonshot write-up (summary plus the five pieces), lightly joined into one paragraph because the detail page renders plain text. `reflection` is empty, so the page shows the reflection placeholder; I did not write one for the user.
+- **Tags:** Bash, JSON, Claude Code, macOS Seatbelt. My pick, based on the current claude-config pieces the write-up names (shell hooks, `scope.json`, Seatbelt). The user may want to change these.
+- **Repo link:** Added only under `resources`, labelled "(currently private)" as the user asked. `link` is left empty so the card has no "View artifact" button that would 404 for visitors. I did not open the repo, as instructed.
+- **Side effects:** The "mega group" filter now shows "no artifacts in this category yet". The home stat stays 4/5 complete. The terminal folder name changes to match the new title.
+- **Hooks:** `git diff docs` was blocked by bash-guard (git disabled), so I read the files directly.

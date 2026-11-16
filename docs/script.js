@@ -82,28 +82,32 @@ const PROJECTS = [
     name: "GitHub Pull Request",
     type: "group",
     team: 0,
-    tags: [],          // add tech stack once known
+    tags: ["Python"],
     featured: false,
-    status: "progress",
-    desc: "For our Artifact 4, we are considering all of our options. As of now, we believe that completing a GitHub PR works with our group the most, and are spending time investigating the different GitHub repositories to give our time towards.",
-    reflection: "",
+    status: "complete",
+    desc: "A fix for pandas issue #71819: when a merge or join key is missing, DataFrame.merge and DataFrame.join now say which DataFrame is missing it and list the columns it does have, instead of raising a bare KeyError.",
+    reflection: "This project felt pretty trivial; find a repo with an issue, take ownership, create a plan, fix it, log everything, and pr with the issue. The difficult part, because of how trivial it was, was oddly enough, setting up the repo. I now know more about forking and pull requests than i used to, along with reviewing issues and following repo rules and guidelines. TLDR: it went good, it was easy, it was simple, and it was uneventful.",
     link: "",
-    overview: "",
-    resources: []
+    overview: "Built as Artifact 4: a contribution to pandas, the Python data analysis library, for issue pandas-dev/pandas#71819. When DataFrame.merge or DataFrame.join was given a key that didn't exist, pandas raised a bare KeyError that named the key but not which DataFrame was missing it. I claimed the issue with /take, forked and synced the repo, and worked on a feature branch. The fix is in pandas/core/reshape/merge.py: a small helper wraps the five key lookups in _get_merge_keys, catches only KeyError, and raises it again with a message that says whether the left DataFrame, the right DataFrame or both are missing the key, and lists the available columns and index levels. It is still a KeyError, so code that already catches it keeps working, and the shared helper in generic.py is untouched, so error messages elsewhere in pandas don't change. One existing test in test_join.py was updated, nine new tests in test_merge.py cover on, left_on, right_on and index-based merges, and a release note was added to the 3.2.0 whatsnew. The full reshape and join suite passed (3062 passed, 0 failed), as did every pre-commit hook. Claude Code wrote the code and tests under pandas' AI contribution policy, and the session log below records each step.",
+    resources: [
+      { label: "pandas #71819 session log", url: "https://github.com/Eagle-Scout/TCSS-490-Black-2/blob/artifact-3/logs/PANDAS_71819_SESSION_LOG.md" }
+    ]
   },
   {
     artifact: 5,
-    name: "Straw in a Needle Pile",
-    type: "mega",
-    team: 0,
-    tags: [],
+    name: "Moonshot — One Safety Policy, Every OS and Agent",
+    type: "solo",
+    team: 1,
+    tags: ["Bash", "JSON", "Claude Code", "macOS Seatbelt"],
     featured: false,
-    status: "tbd",
-    desc: "A PC game to be released on Steam — or maybe it's just finding a single strand of hay in a pile of needles.",
+    status: "progress",
+    desc: "One safety policy, written once and enforced on every OS and every AI coding agent. claude-config, my hardened setup for Claude Code on macOS, grows into a portable policy layer with a desktop app to edit and install it.",
     reflection: "",
     link: "",
-    overview: "",
-    resources: []
+    overview: "Claude-config is a hardened security setup for one pairing: Claude Code on macOS. The moonshot is to turn it into a portable policy layer. You write your rules once, and they are compiled into whatever enforcement each OS and AI agent actually offers. A desktop app lets you edit the policy, see what each agent tried to do, and review and install changes without hand-editing JSON and shell. The pieces: (1) A neutral policy format. The Allow / Ask / Deny tiers of SCOPE.md and the scope.json keys (git, network, one command, protected files) become a schema that names no specific tool or OS. (2) Adapters per OS. The macOS-specific parts are Seatbelt, root-owned /Library paths, APFS case handling and /usr/bin/jq; each gets a Linux and Windows equivalent covering the sandbox, tamper-proof install location and path rules. (3) Adapters per AI agent. Each agent gets a translation of the policy into its own hooks, permission settings and instruction files. Where an agent has no blocking hook, the adapter falls back to the OS sandbox and says so. (4) A shared conformance suite. test-hooks.sh grows into one set of sample tool calls that every OS and agent pairing must pass, producing an honest coverage matrix of what is enforced, only requested, or not covered. (5) A frontend app with a policy editor, a per-project scope view, a log viewer over .claude/logs/, and a diff-then-install flow.",
+    resources: [
+      { label: "GitHub repo: claude-config (currently private)", url: "https://github.com/Eagle-Scout/claude-config" }
+    ]
   }
 ];
 
