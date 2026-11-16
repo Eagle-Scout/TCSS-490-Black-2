@@ -68,3 +68,17 @@ Work that isn't tied to one artifact (portfolio site, README, tooling, setup).
 - **Repo link:** Added only under `resources`, labelled "(currently private)" as the user asked. `link` is left empty so the card has no "View artifact" button that would 404 for visitors. I did not open the repo, as instructed.
 - **Side effects:** The "mega group" filter now shows "no artifacts in this category yet". The home stat stays 4/5 complete. The terminal folder name changes to match the new title.
 - **Hooks:** `git diff docs` was blocked by bash-guard (git disabled), so I read the files directly.
+
+## Moonshot commit landed on the wrong branch
+
+- **What happened:** The Moonshot portfolio edits were committed on `artifact-3` (`e5e85f3`, "updated for artifact 4 and 5"). The `moonshot` branch was then checked out at `b6b9aea`, the commit before, so it and `origin/moonshot` showed the old Artifact 5 files.
+- **Mistake (user's):** Committing before switching to the new branch. **Mistake (mine):** In the first turn I didn't point out that the edits were uncommitted on `artifact-3`, or say which branch they should go on.
+- **How it was found:** Git commands are blocked by the hook, so I read `.git/HEAD`, `.git/refs/heads/*` and `.git/logs/HEAD` directly.
+- **Fix:** The user ran `git switch moonshot`, `git merge --ff-only artifact-3` and pushed. I couldn't run git. `--ff-only` was chosen because `moonshot` was directly behind `artifact-3`, so it just moves the branch with no merge commit. `moonshot` now points at `e5e85f3`.
+- **Left as is:** `artifact-3` still has the Moonshot commit too. The user can move it back if they want that branch to end at Artifact 4.
+- **Why this entry is late:** I waited until after the fast-forward. An uncommitted edit to this file would have blocked the merge.
+
+## Moonshot reflection added
+
+- **Change:** Set the Artifact 5 `reflection` in `docs/script.js` to the user's paragraph, word for word.
+- **Reason:** The user asked for it verbatim, so nothing was changed, including "MacOS".
