@@ -82,3 +82,13 @@ Work that isn't tied to one artifact (portfolio site, README, tooling, setup).
 
 - **Change:** Set the Artifact 5 `reflection` in `docs/script.js` to the user's paragraph, word for word.
 - **Reason:** The user asked for it verbatim, so nothing was changed, including "MacOS".
+
+## Moonshot updated to claude-config 1.0.0-beta.1 (2026-11-23)
+
+- **Review:** The user asked for a review of the claude-config update from Alpha to 1.0.0-beta.1. The only source was the changelog the user copied into the repo. The claude-config repo is outside this repo and off-limits, so its commit `f752fda`, `REMAINING.md`, its `LOG.md` and the test results were not checked.
+- **Findings shared with the user:** (1) The changelog says 1.0.0 ships with the frontend, "Parts 2 and 3 of the plan", but the portfolio lists five pieces with the frontend as piece 5, so the numbering doesn't line up. Left as is; the changelog is the user's. (2) The new non-ASCII rule means Bash commands here can't contain the em dashes used in `docs/`; searches for them have to use the Grep tool. (3) Only item 1 of 20 in Order 4 is done.
+- **Change, `docs/script.js`, Artifact 5:** Added a "Current release: 1.0.0-beta.1" part to the end of `overview`, summarizing the alpha and the beta.1 Unicode fix. Added a resource link to the changelog. `desc`, `reflection`, `status` and tags are unchanged.
+- **Changelog file:** The plan was to move `CHANGELOG copy.md` to `logs/CLAUDE_CONFIG_CHANGELOG.md`. My `mv` failed because the user had already renamed it to `CONFIG_CHANGELOG.md` at the repo root. I kept the user's name and location and linked that instead.
+- **Link:** Points at `blob/moonshot/CONFIG_CHANGELOG.md`, not `blob/artifact-3/` like the other resources, because the file only exists on `moonshot`. It 404s until the file is committed and pushed.
+- **Change, `README.md`, Artifact 4:** The user said to mark Artifact 4 complete. The site already had it as complete; the README still had the old "(In Progress)" check-in text. Replaced it with a summary of the pandas #71819 fix taken from the site's overview, and a link to the session log.
+- **Change, `README.md`, Artifact 5:** Replaced the empty "Straw in a Needle Pile" heading with a Moonshot section: what claude-config is, the goal, the current version, the versioning rule and a changelog link. The heading is marked "(In Progress)" to match the site's status.

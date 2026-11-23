@@ -52,8 +52,21 @@ Needs macOS 14+, Xcode, Node.js and Claude Code. Status: the server passes its t
 - [Devlog](logs/LOG3.md)
 - [Source folder](AdFree/)
 
-## Artifact 4 - GitHub Pull Request (In Progress)
+## Artifact 4 - GitHub Pull Request
 
-We are considering all of our options. As of now, we believe that completing a GitHub PR works with our group the most, and are spending time investigating the different GitHub repositories to give our time towards.
+A fix for pandas issue [pandas-dev/pandas#71819](https://github.com/pandas-dev/pandas/issues/71819). When `DataFrame.merge` or `DataFrame.join` was given a key that didn't exist, pandas raised a bare `KeyError`. It now says whether the left DataFrame, the right DataFrame or both are missing the key, and lists the columns and index levels they do have. It is still a `KeyError`, so existing code that catches it keeps working.
 
-## Artifact 5 - Moonshot - Straw in a Needle Pile
+- **Change:** a small helper in `pandas/core/reshape/merge.py` wraps the five key lookups in `_get_merge_keys`.
+- **Tests:** one existing test in `test_join.py` updated, nine new tests in `test_merge.py`, and a release note in the 3.2.0 whatsnew. The reshape and join suite passed (3062 passed, 0 failed), as did every pre-commit hook.
+
+- [Session log](logs/PANDAS_71819_SESSION_LOG.md)
+
+## Artifact 5 - Moonshot - One Safety Policy, Every OS and Agent (In Progress)
+
+**claude-config** is a hardened setup for Claude Code on macOS: root-owned hooks and managed settings, the sandbox, per-project `scope.json` and `SCOPE.md`, two guard scripts (`bash-guard`, `path-guard`), a Haiku reviewer and daily logs. The moonshot turns it into a portable policy layer: rules written once and compiled into whatever enforcement each OS and AI agent offers, with a desktop app to edit, review and install them.
+
+- **Current release:** `1.0.0-beta.1` (2026-11-22). Both guards now refuse non-ASCII characters in Bash commands and file-tool paths, because macOS folds Unicode case and look-alike characters could get past the name rules.
+- **Versioning:** each finished step of the plan adds one to the beta number. `1.0.0` ships with the frontend.
+
+- [Changelog](CONFIG_CHANGELOG.md)
+- claude-config repo (currently private)
